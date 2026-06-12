@@ -147,14 +147,15 @@ export function Dashboard() {
     </div>
   );
 
-  const contentWidth =
-    activeTab === "fulltable"
-      ? "w-full px-2 sm:px-3"
-      : "max-w-5xl mx-auto px-4 sm:px-6";
+  const contentWidth = "max-w-5xl mx-auto px-4 sm:px-6";
 
   return (
     <div className="space-y-10">
-      <div className={`${contentWidth} flex flex-col items-center gap-3`}>
+      <div
+        className={`flex flex-col items-center gap-3 ${
+          activeTab === "fulltable" ? "w-full" : contentWidth
+        }`}
+      >
         <TabNav active={activeTab} onChange={setActiveTab} />
         {refreshing && (
           <span className="text-[10px] text-gold/70 uppercase tracking-widest">
@@ -184,20 +185,30 @@ export function Dashboard() {
           </section>
         </div>
       ) : (
-        <section className="w-full">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-6">
-            <h2 className="text-center text-xs uppercase tracking-[0.3em] text-white/40">
-              Kõik ennustused
-            </h2>
-          </div>
+        <section className="w-full max-w-none">
+          <h2 className="text-center text-xs uppercase tracking-[0.3em] text-white/40 mb-6">
+            Kõik ennustused
+          </h2>
           <FullPredictionTable grid={data.grid} />
         </section>
       )}
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">{statsBar}</div>
+      <div
+        className={
+          activeTab === "fulltable"
+            ? "w-full px-4 sm:px-6"
+            : `${contentWidth}`
+        }
+      >
+        {statsBar}
+      </div>
 
       {/* Rules footer */}
-      <footer className="max-w-5xl mx-auto px-4 sm:px-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 text-center">
+      <footer
+        className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 text-center ${
+          activeTab === "fulltable" ? "w-full px-4 sm:px-6" : contentWidth
+        }`}
+      >
         <p className="text-xs uppercase tracking-widest text-white/30 mb-3">
           Mängureeglid
         </p>

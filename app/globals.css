@@ -82,3 +82,22 @@ body {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
 }
+
+.table-scroll-x {
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 999px) {
+  .full-prediction-table {
+    width: max-content;
+    min-width: 1180px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .full-prediction-table {
+    width: 100%;
+    max-width: none;
+    table-layout: fixed;
+  }
+}

@@ -10,6 +10,11 @@ const CELL_STYLES: Record<PredictionCell["type"], string> = {
   pending: "text-white/70",
 };
 
+const STICKY_HEAD =
+  "max-[999px]:sticky max-[999px]:z-20 max-[999px]:bg-pitch/95 max-[999px]:backdrop-blur-sm";
+const STICKY_BODY =
+  "max-[999px]:sticky max-[999px]:z-10 max-[999px]:bg-pitch/90 max-[999px]:backdrop-blur-sm";
+
 function PredictionBadge({ cell }: { cell: PredictionCell }) {
   return (
     <div className="flex flex-col items-center justify-center gap-0.5">
@@ -45,36 +50,51 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
         </span>
       </div>
 
-      <div className="w-full border-y border-white/10 bg-white/5 backdrop-blur-sm">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full min-w-full table-fixed border-collapse text-xs">
-            <colgroup>
-              <col style={{ width: 36 }} />
-              <col style={{ width: "13%" }} />
-              <col style={{ width: "13%" }} />
-              <col style={{ width: 52 }} />
+      <p className="hidden max-[999px]:block text-center text-[10px] text-white/35 px-4">
+        Keri horisontaalselt, et näha kõiki mängijaid →
+      </p>
+
+      <div className="w-full max-w-none border-y border-white/10 bg-white/5 backdrop-blur-sm">
+        <div className="table-scroll-x max-[999px]:overflow-x-auto min-[1000px]:overflow-visible w-full max-w-none overscroll-x-contain">
+          <table className="full-prediction-table border-collapse text-xs">
+            <colgroup className="min-[1000px]:contents">
+              <col className="max-[999px]:w-8 min-[1000px]:w-[36px]" />
+              <col className="max-[999px]:w-[108px] min-[1000px]:w-[13%]" />
+              <col className="max-[999px]:w-[108px] min-[1000px]:w-[13%]" />
+              <col className="max-[999px]:w-14 min-[1000px]:w-[52px]" />
               {grid.playerNames.map((name) => (
-                <col key={name} />
+                <col
+                  key={name}
+                  className="max-[999px]:w-14 min-[1000px]:w-auto"
+                />
               ))}
             </colgroup>
             <thead>
               <tr className="border-b border-white/10">
-                <th className="px-2 py-2.5 text-left text-white/40 font-medium">
+                <th
+                  className={`px-2 py-2.5 text-left text-white/40 font-medium ${STICKY_HEAD} max-[999px]:left-0`}
+                >
                   Gr
                 </th>
-                <th className="px-2 py-2.5 text-left text-white/40 font-medium">
-                   
+                <th
+                  className={`px-2 py-2.5 text-left text-white/40 font-medium ${STICKY_HEAD} max-[999px]:left-8`}
+                >
+                  Kodu
                 </th>
-                <th className="px-2 py-2.5 text-left text-white/40 font-medium">
-                  
+                <th
+                  className={`px-2 py-2.5 text-left text-white/40 font-medium ${STICKY_HEAD} max-[999px]:left-[116px]`}
+                >
+                  Võõrsil
                 </th>
-                <th className="px-1 py-2.5 text-center text-white/40 font-medium border-r border-white/10">
+                <th
+                  className={`px-1 py-2.5 text-center text-white/40 font-medium border-r border-white/10 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)] max-[999px]:shadow-[6px_0_16px_-6px_rgba(0,0,0,0.6)] ${STICKY_HEAD} max-[999px]:left-[224px]`}
+                >
                   Tulemus
                 </th>
                 {grid.playerNames.map((name) => (
                   <th
                     key={name}
-                    className="px-0.5 py-2.5 text-center text-white/60 font-semibold truncate"
+                    className="px-0.5 py-2.5 text-center text-white/60 font-semibold whitespace-nowrap min-[1000px]:truncate"
                     title={name}
                   >
                     {name}
@@ -90,22 +110,26 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
                     i % 2 === 0 ? "" : "bg-white/[0.015]"
                   }`}
                 >
-                  <td className="px-2 py-1.5 font-bold text-white/30 text-center">
+                  <td
+                    className={`px-2 py-1.5 font-bold text-white/30 text-center ${STICKY_BODY} max-[999px]:left-0`}
+                  >
                     {row.group}
                   </td>
                   <td
-                    className="px-2 py-1.5 text-white/80 truncate"
+                    className={`px-2 py-1.5 text-white/80 whitespace-nowrap min-[1000px]:truncate ${STICKY_BODY} max-[999px]:left-8`}
                     title={row.homeEt}
                   >
                     {row.homeEt}
                   </td>
                   <td
-                    className="px-2 py-1.5 text-white/80 truncate"
+                    className={`px-2 py-1.5 text-white/80 whitespace-nowrap min-[1000px]:truncate ${STICKY_BODY} max-[999px]:left-[116px]`}
                     title={row.awayEt}
                   >
                     {row.awayEt}
                   </td>
-                  <td className="px-1 py-1.5 text-center border-r border-white/10">
+                  <td
+                    className={`px-1 py-1.5 text-center border-r border-white/10 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)] max-[999px]:shadow-[6px_0_16px_-6px_rgba(0,0,0,0.6)] ${STICKY_BODY} max-[999px]:left-[224px]`}
+                  >
                     {row.actual ? (
                       <span className="font-mono font-bold text-gold tabular-nums text-[11px]">
                         {row.actual}
@@ -125,7 +149,7 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
               <tr className="border-t-2 border-gold/20 bg-gold/5">
                 <td
                   colSpan={4}
-                  className="px-2 py-2 font-semibold text-gold border-r border-white/10"
+                  className={`px-2 py-2 font-semibold text-gold border-r border-white/10 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)] max-[999px]:shadow-[6px_0_16px_-6px_rgba(0,0,0,0.6)] ${STICKY_BODY} max-[999px]:left-0 max-[999px]:z-10`}
                 >
                   🏆 Meister
                 </td>
@@ -133,7 +157,7 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
                   <td key={name} className="px-0.5 py-2 text-center">
                     {grid.championPicks[name] ? (
                       <span
-                        className="text-[10px] text-white/70 truncate block"
+                        className="text-[10px] text-white/70 whitespace-nowrap"
                         title={grid.championPicks[name]!}
                       >
                         {teamFlag(grid.championPicks[name]!)}
@@ -148,8 +172,6 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
           </table>
         </div>
       </div>
-
- 
     </div>
   );
 }
