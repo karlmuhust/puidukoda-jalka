@@ -6,14 +6,22 @@ const FIXTURES_URL =
 
 /** Live scores — always fetch fresh (no CDN / Data Cache) */
 export async function fetchOpenFootballData() {
-  const res = await fetch(OPENFOOTBALL_URL, { cache: "no-store" });
+  const res = await fetch(OPENFOOTBALL_URL, {
+    cache: "no-store",
+    next: { revalidate: 0 },
+    headers: { "Cache-Control": "no-cache" },
+  });
   if (!res.ok) throw new Error(`openfootball fetch failed: ${res.status}`);
   return res.json();
 }
 
-/** Fixture schedule — changes rarely; short revalidate is fine on Vercel */
+/** Fixture schedule — re-fetch on each leaderboard request */
 export async function fetchFixturesData() {
-  const res = await fetch(FIXTURES_URL, { next: { revalidate: 3600 } });
+  const res = await fetch(FIXTURES_URL, {
+    cache: "no-store",
+    next: { revalidate: 0 },
+    headers: { "Cache-Control": "no-cache" },
+  });
   if (!res.ok) throw new Error(`fixtures fetch failed: ${res.status}`);
   return res.json();
 }

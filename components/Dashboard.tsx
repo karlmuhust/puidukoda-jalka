@@ -19,14 +19,18 @@ export function Dashboard() {
   const [refreshing, setRefreshing] = useState(false);
   const dataRef = useRef<LeaderboardData | null>(null);
 
-  const fetchData = useCallback(async (isInitial = false) => {
+  const fetchData = useCallback(async (force = false) => {
+    const isInitial = dataRef.current === null;
     try {
-      const res = await fetch("/api/leaderboard", { cache: "no-store" });
+      const res = await fetch(`/api/leaderboard?_=${Date.now()}`, {
+        cache: "no-store",
+        headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+      });
       if (!res.ok) throw new Error("Failed to fetch");
       const json: LeaderboardData = await res.json();
 
       const shouldUpdate =
-        isInitial || hasNewFinishedResults(dataRef.current, json);
+        force || hasNewFinishedResults(dataRef.current, json);
 
       if (shouldUpdate) {
         if (!isInitial) setRefreshing(true);
@@ -37,7 +41,6 @@ export function Dashboard() {
           setTimeout(() => setRefreshing(false), 1500);
         }
       } else {
-        // Keep match status in ref for poll timing, without re-rendering UI
         dataRef.current = json;
       }
     } catch {
@@ -59,25 +62,31 @@ export function Dashboard() {
       timeoutId = setTimeout(poll, interval);
     };
 
-    const poll = async () => {
-      await fetchData(dataRef.current === null);
+    const poll = async (force = false) => {
+      await fetchData(force || dataRef.current === null);
       scheduleNext();
     };
 
-    poll();
+    poll(true);
 
     const onVisible = () => {
       if (document.visibilityState === "visible") {
         clearTimeout(timeoutId);
-        poll();
+        poll(true);
       }
     };
     document.addEventListener("visibilitychange", onVisible);
+
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) poll(true);
+    };
+    window.addEventListener("pageshow", onPageShow);
 
     return () => {
       cancelled = true;
       clearTimeout(timeoutId);
       document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("pageshow", onPageShow);
     };
   }, [fetchData]);
 
