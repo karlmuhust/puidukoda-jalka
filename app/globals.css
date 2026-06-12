@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  --pitch: #0a1f12;
+  --pitch-light: #1a4d2e;
+  --gold: #d4a843;
+  --gold-light: #f0d078;
+}
+
+@theme inline {
+  --color-pitch: var(--pitch);
+  --color-pitch-light: var(--pitch-light);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--pitch);
+  color: #ededed;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.pitch-bg {
+  background-color: var(--pitch);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(26, 77, 46, 0.5), transparent),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 49px,
+      rgba(255, 255, 255, 0.015) 49px,
+      rgba(255, 255, 255, 0.015) 50px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 49px,
+      rgba(255, 255, 255, 0.015) 49px,
+      rgba(255, 255, 255, 0.015) 50px
+    );
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+@keyframes pulse-live {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.live-pulse {
+  animation: pulse-live 1.5s ease-in-out infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
