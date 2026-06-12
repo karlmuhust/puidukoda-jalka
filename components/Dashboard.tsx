@@ -6,7 +6,7 @@ import { LeaderboardTable } from "./LeaderboardTable";
 import { MatchResults } from "./MatchResults";
 import { FullPredictionTable } from "./FullPredictionTable";
 import { TabNav } from "./TabNav";
-import { getPollIntervalMs } from "@/lib/refresh";
+import { getPollIntervalMs, hasNewFinishedResults } from "@/lib/refresh";
 import type { LeaderboardData } from "@/lib/types";
 
 type Tab = "leaderboard" | "fulltable";
@@ -20,19 +20,30 @@ export function Dashboard() {
   const dataRef = useRef<LeaderboardData | null>(null);
 
   const fetchData = useCallback(async (isInitial = false) => {
-    if (!isInitial) setRefreshing(true);
     try {
       const res = await fetch("/api/leaderboard", { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to fetch");
       const json: LeaderboardData = await res.json();
-      dataRef.current = json;
-      setData(json);
-      setError(null);
+
+      const shouldUpdate =
+        isInitial || hasNewFinishedResults(dataRef.current, json);
+
+      if (shouldUpdate) {
+        if (!isInitial) setRefreshing(true);
+        dataRef.current = json;
+        setData(json);
+        setError(null);
+        if (!isInitial) {
+          setTimeout(() => setRefreshing(false), 1500);
+        }
+      } else {
+        // Keep match status in ref for poll timing, without re-rendering UI
+        dataRef.current = json;
+      }
     } catch {
       if (isInitial) setError("Andmete laadimine ebaõnnestus");
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      if (isInitial) setLoading(false);
     }
   }, []);
 
@@ -44,7 +55,7 @@ export function Dashboard() {
       if (cancelled) return;
       const interval = dataRef.current
         ? getPollIntervalMs(dataRef.current.matches)
-        : 30_000;
+        : 15 * 60 * 1000;
       timeoutId = setTimeout(poll, interval);
     };
 
@@ -146,8 +157,8 @@ export function Dashboard() {
       <div className={`${contentWidth} flex flex-col items-center gap-3`}>
         <TabNav active={activeTab} onChange={setActiveTab} />
         {refreshing && (
-          <span className="text-[10px] text-white/30 uppercase tracking-widest live-pulse">
-            Uuendan tulemusi…
+          <span className="text-[10px] text-gold/70 uppercase tracking-widest">
+            Uued tulemused!
           </span>
         )}
       </div>
@@ -220,7 +231,7 @@ export function Dashboard() {
           ))}
         </div>
         <p className="text-[10px] text-white/20 mt-4">
-          Tulemused uuenevad automaatselt (15s–2min) ·
+          Tulemused uuenevad automaatselt pärast mängu lõppu ·
           openfootball/worldcup.json · thestatsapi.com
         </p>
       </footer>
