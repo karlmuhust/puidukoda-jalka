@@ -10,11 +10,6 @@ const CELL_STYLES: Record<PredictionCell["type"], string> = {
   pending: "text-white/70",
 };
 
-const STICKY_HEAD =
-  "max-[999px]:sticky max-[999px]:z-20 max-[999px]:bg-pitch/95 max-[999px]:backdrop-blur-sm";
-const STICKY_BODY =
-  "max-[999px]:sticky max-[999px]:z-10 max-[999px]:bg-pitch/90 max-[999px]:backdrop-blur-sm";
-
 function PredictionBadge({ cell }: { cell: PredictionCell }) {
   return (
     <div className="flex flex-col items-center justify-center gap-0.5">
@@ -71,24 +66,16 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
             </colgroup>
             <thead>
               <tr className="border-b border-white/10">
-                <th
-                  className={`px-2 py-2.5 text-left text-white/40 font-medium ${STICKY_HEAD} max-[999px]:left-0`}
-                >
+                <th className="px-2 py-2.5 text-left text-white/40 font-medium">
                   Gr
                 </th>
-                <th
-                  className={`px-2 py-2.5 text-left text-white/40 font-medium ${STICKY_HEAD} max-[999px]:left-8`}
-                >
+                <th className="px-2 py-2.5 text-left text-white/40 font-medium">
                   Kodu
                 </th>
-                <th
-                  className={`px-2 py-2.5 text-left text-white/40 font-medium ${STICKY_HEAD} max-[999px]:left-[116px]`}
-                >
+                <th className="px-2 py-2.5 text-left text-white/40 font-medium">
                   Võõrsil
                 </th>
-                <th
-                  className={`px-1 py-2.5 text-center text-white/40 font-medium border-r border-white/10 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)] max-[999px]:shadow-[6px_0_16px_-6px_rgba(0,0,0,0.6)] ${STICKY_HEAD} max-[999px]:left-[224px]`}
-                >
+                <th className="px-1 py-2.5 text-center text-white/40 font-medium border-r border-white/10">
                   Tulemus
                 </th>
                 {grid.playerNames.map((name) => (
@@ -110,26 +97,22 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
                     i % 2 === 0 ? "" : "bg-white/[0.015]"
                   }`}
                 >
-                  <td
-                    className={`px-2 py-1.5 font-bold text-white/30 text-center ${STICKY_BODY} max-[999px]:left-0`}
-                  >
+                  <td className="px-2 py-1.5 font-bold text-white/30 text-center">
                     {row.group}
                   </td>
                   <td
-                    className={`px-2 py-1.5 text-white/80 whitespace-nowrap min-[1000px]:truncate ${STICKY_BODY} max-[999px]:left-8`}
+                    className="px-2 py-1.5 text-white/80 whitespace-nowrap min-[1000px]:truncate"
                     title={row.homeEt}
                   >
                     {row.homeEt}
                   </td>
                   <td
-                    className={`px-2 py-1.5 text-white/80 whitespace-nowrap min-[1000px]:truncate ${STICKY_BODY} max-[999px]:left-[116px]`}
+                    className="px-2 py-1.5 text-white/80 whitespace-nowrap min-[1000px]:truncate"
                     title={row.awayEt}
                   >
                     {row.awayEt}
                   </td>
-                  <td
-                    className={`px-1 py-1.5 text-center border-r border-white/10 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)] max-[999px]:shadow-[6px_0_16px_-6px_rgba(0,0,0,0.6)] ${STICKY_BODY} max-[999px]:left-[224px]`}
-                  >
+                  <td className="px-1 py-1.5 text-center border-r border-white/10">
                     {row.actual ? (
                       <span className="font-mono font-bold text-gold tabular-nums text-[11px]">
                         {row.actual}
@@ -149,7 +132,7 @@ export function FullPredictionTable({ grid }: { grid: PredictionGrid }) {
               <tr className="border-t-2 border-gold/20 bg-gold/5">
                 <td
                   colSpan={4}
-                  className={`px-2 py-2 font-semibold text-gold border-r border-white/10 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)] max-[999px]:shadow-[6px_0_16px_-6px_rgba(0,0,0,0.6)] ${STICKY_BODY} max-[999px]:left-0 max-[999px]:z-10`}
+                  className="px-2 py-2 font-semibold text-gold border-r border-white/10"
                 >
                   🏆 Meister
                 </td>
