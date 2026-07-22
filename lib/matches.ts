@@ -17,7 +17,11 @@ interface OpenFootballMatch {
   time?: string;
   team1: string;
   team2: string;
-  score?: { ft: [number, number]; ht?: [number, number] };
+  score?: {
+    ft: [number, number];
+    ht?: [number, number];
+    et?: [number, number];
+  };
   goals1?: { name: string; minute: string }[];
   goals2?: { name: string; minute: string }[];
   group?: string;
