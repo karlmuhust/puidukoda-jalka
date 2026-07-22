@@ -77,6 +77,7 @@ export function computePlayerScores(
 
   scores.sort((a, b) => {
     if (b.total !== a.total) return b.total - a.total;
+    if (b.champion !== a.champion) return b.champion - a.champion;
     return b.exact - a.exact;
   });
   scores.forEach((s, i) => {
