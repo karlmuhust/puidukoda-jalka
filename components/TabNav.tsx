@@ -1,6 +1,6 @@
 "use client";
 
-type Tab = "leaderboard" | "fulltable";
+type Tab = "leaderboard" | "fulltable" | "facts";
 
 export function TabNav({
   active,
@@ -12,6 +12,7 @@ export function TabNav({
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "leaderboard", label: "Edetabel", icon: "🏆" },
     { id: "fulltable", label: "Täistabel", icon: "📋" },
+    { id: "facts", label: "Faktid", icon: "💡" },
   ];
 
   return (

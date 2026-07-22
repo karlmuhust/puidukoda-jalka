@@ -1,4 +1,5 @@
 import { Dashboard } from "@/components/Dashboard";
+import { TOURNAMENT_ARCHIVED } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -11,9 +12,17 @@ export default function Home() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-10 pb-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gold/30 bg-gold/10 text-gold text-xs font-medium uppercase tracking-widest mb-4">
-            <span className="live-pulse w-1.5 h-1.5 rounded-full bg-gold inline-block" />
-            Live edetabel
+          <div
+            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium uppercase tracking-widest mb-4 ${
+              TOURNAMENT_ARCHIVED
+                ? "border-white/20 bg-white/5 text-white/60"
+                : "border-gold/30 bg-gold/10 text-gold"
+            }`}
+          >
+            {!TOURNAMENT_ARCHIVED && (
+              <span className="live-pulse w-1.5 h-1.5 rounded-full bg-gold inline-block" />
+            )}
+            {TOURNAMENT_ARCHIVED ? "Arhiveeritud" : "Live edetabel"}
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
             Muhu Puidukoda

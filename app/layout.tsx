@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Muhu Puidukoda MM 2026 | Live Edetabel",
+  title: "Muhu Puidukoda MM 2026 | Edetabel",
   description:
-    "Jalgpalli maailmameistrivõistluste 2026 ennustusmäng — live edetabel Muhu Puidukodas",
+    "Jalgpalli maailmameistrivõistluste 2026 ennustusmäng — lõplik edetabel Muhu Puidukodas",
 };
 
 export default function RootLayout({

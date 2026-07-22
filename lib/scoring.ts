@@ -75,7 +75,10 @@ export function computePlayerScores(
     };
   });
 
-  scores.sort((a, b) => b.total - a.total);
+  scores.sort((a, b) => {
+    if (b.total !== a.total) return b.total - a.total;
+    return b.exact - a.exact;
+  });
   scores.forEach((s, i) => {
     s.rank = i + 1;
   });

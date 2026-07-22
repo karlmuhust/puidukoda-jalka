@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getLeaderboardData } from "@/lib/leaderboard";
+import { TOURNAMENT_ARCHIVED } from "@/lib/config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,6 +10,14 @@ export const dynamic = "force-dynamic";
  * Set CRON_SECRET in Vercel env vars (Vercel can auto-generate it).
  */
 export async function GET(request: Request) {
+  if (TOURNAMENT_ARCHIVED) {
+    return NextResponse.json({
+      ok: true,
+      archived: true,
+      message: "Tournament archived — sync disabled",
+    });
+  }
+
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret) {
     const auth = request.headers.get("authorization");

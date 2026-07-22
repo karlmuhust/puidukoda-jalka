@@ -191,8 +191,22 @@ export function getPoolMatchList(): { homeEt: string; awayEt: string; group: str
   return pairs;
 }
 
-export function detectChampion(matches: PoolMatch[]): string | null {
-  // Champion only known after final — check if we have final result from API
-  // For now return null until tournament ends
-  return null;
+export async function detectChampion(): Promise<string | null> {
+  try {
+    const ofData = (await fetchOpenFootballData()) as OpenFootballData;
+    const final = ofData.matches.find(
+      (m) => m.round?.toLowerCase() === "final"
+    );
+    if (!final?.score) return null;
+
+    const result = final.score.et ?? final.score.ft;
+    if (!result) return null;
+
+    const [s1, s2] = result;
+    if (s1 > s2) return normalizeTeam(final.team1);
+    if (s2 > s1) return normalizeTeam(final.team2);
+    return null;
+  } catch {
+    return null;
+  }
 }

@@ -5,11 +5,13 @@ import { Podium } from "./Podium";
 import { LeaderboardTable } from "./LeaderboardTable";
 import { MatchResults } from "./MatchResults";
 import { FullPredictionTable } from "./FullPredictionTable";
+import { FactsTab } from "./FactsTab";
 import { TabNav } from "./TabNav";
 import { getPollIntervalMs, hasNewFinishedResults } from "@/lib/refresh";
+import { TOURNAMENT_ARCHIVED } from "@/lib/config";
 import type { LeaderboardData } from "@/lib/types";
 
-type Tab = "leaderboard" | "fulltable";
+type Tab = "leaderboard" | "fulltable" | "facts";
 
 export function Dashboard() {
   const [data, setData] = useState<LeaderboardData | null>(null);
@@ -55,7 +57,7 @@ export function Dashboard() {
     let timeoutId: ReturnType<typeof setTimeout>;
 
     const scheduleNext = () => {
-      if (cancelled) return;
+      if (cancelled || TOURNAMENT_ARCHIVED) return;
       const interval = dataRef.current
         ? getPollIntervalMs(dataRef.current.matches)
         : 15 * 60 * 1000;
@@ -68,6 +70,12 @@ export function Dashboard() {
     };
 
     poll(true);
+
+    if (TOURNAMENT_ARCHIVED) {
+      return () => {
+        cancelled = true;
+      };
+    }
 
     const onVisible = () => {
       if (document.visibilityState === "visible") {
@@ -123,13 +131,29 @@ export function Dashboard() {
       {[
         { label: "Mängijaid", value: data.players.length },
         { label: "Mänge mängitud", value: finishedCount },
-        { label: "Otse praegu", value: liveCount, highlight: liveCount > 0 },
+        ...(data.archived
+          ? [
+              {
+                label: "Meister",
+                value: data.championActual ?? "—",
+                small: true,
+              },
+            ]
+          : [
+              {
+                label: "Otse praegu",
+                value: liveCount,
+                highlight: liveCount > 0,
+              },
+            ]),
         {
-          label: "Viimati uuendatud",
-          value: new Date(data.lastUpdated).toLocaleTimeString("et-EE", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+          label: data.archived ? "Arhiveeritud" : "Viimati uuendatud",
+          value: data.archived
+            ? "MM 2026"
+            : new Date(data.lastUpdated).toLocaleTimeString("et-EE", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
           small: true,
         },
       ].map((stat) => (
@@ -193,6 +217,13 @@ export function Dashboard() {
             <MatchResults matches={data.matches} />
           </section>
         </div>
+      ) : activeTab === "facts" ? (
+        <section className="w-full">
+          <h2 className="text-center text-xs uppercase tracking-[0.3em] text-white/40 mb-6">
+            Huvitavad faktid
+          </h2>
+          <FactsTab data={data} />
+        </section>
       ) : (
         <section className="w-full max-w-none">
           <h2 className="text-center text-xs uppercase tracking-[0.3em] text-white/40 mb-6">
@@ -251,8 +282,9 @@ export function Dashboard() {
           ))}
         </div>
         <p className="text-[10px] text-white/20 mt-4">
-          Tulemused uuenevad automaatselt pärast mängu lõppu ·
-          openfootball/worldcup.json · thestatsapi.com
+          {data.archived
+            ? "Turniir on lõppenud — edetabel on arhiveeritud"
+            : "Tulemused uuenevad automaatselt pärast mängu lõppu · openfootball/worldcup.json · thestatsapi.com"}
         </p>
       </footer>
     </div>

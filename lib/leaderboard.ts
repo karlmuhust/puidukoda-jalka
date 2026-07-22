@@ -2,13 +2,16 @@ import { parsePredictionsFromXls } from "./parse-predictions";
 import { fetchLiveMatches, getPoolMatchList, detectChampion } from "./matches";
 import { computePlayerScores } from "./scoring";
 import { buildPredictionGrid } from "./grid";
+import { TOURNAMENT_ARCHIVED, ARCHIVED_CHAMPION } from "./config";
 import type { LeaderboardData } from "./types";
 
 export async function getLeaderboardData(): Promise<LeaderboardData> {
   const playerPredictions = parsePredictionsFromXls();
   const poolList = getPoolMatchList();
   const matches = await fetchLiveMatches(poolList);
-  const championActual = detectChampion(matches);
+  const championActual =
+    (await detectChampion()) ??
+    (TOURNAMENT_ARCHIVED ? ARCHIVED_CHAMPION : null);
   const playerScores = computePlayerScores(
     playerPredictions,
     matches,
@@ -21,6 +24,7 @@ export async function getLeaderboardData(): Promise<LeaderboardData> {
     matches,
     grid,
     championActual,
+    archived: TOURNAMENT_ARCHIVED,
     lastUpdated: new Date().toISOString(),
     rules: {
       exactScore: 3,

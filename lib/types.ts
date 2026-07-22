@@ -69,6 +69,7 @@ export interface LeaderboardData {
   matches: PoolMatch[];
   grid: PredictionGrid;
   championActual: string | null;
+  archived: boolean;
   lastUpdated: string;
   rules: {
     exactScore: number;
